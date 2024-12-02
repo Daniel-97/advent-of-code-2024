@@ -9,6 +9,11 @@ import (
 	"strings"
 )
 
+func compare_val(val1 int, val2 int) (is_inc bool, is_dec bool, is_safe bool) {
+	return val1 < val2, val1 > val2, math.Abs(float64(val1-val2)) > 0 && math.Abs(float64(val1-val2)) <= 3
+
+}
+
 func part_1(file *os.File) int {
 	scanner := bufio.NewScanner(file)
 	safe_reports := 0
@@ -24,17 +29,13 @@ func part_1(file *os.File) int {
 		for i := 0; i < len(data)-1; i++ {
 			val, _ := strconv.Atoi(data[i])
 			next_val, _ := strconv.Atoi(data[i+1])
-			if math.Abs(float64(val-next_val)) > 3 {
-				is_safe = false
+
+			inc, dec, safe := compare_val(val, next_val)
+			is_increasing = is_increasing && inc
+			is_decresing = is_decresing && dec
+			is_safe = safe
+			if !is_safe {
 				break
-			}
-
-			if val <= next_val {
-				is_increasing = false
-			}
-
-			if val >= next_val {
-				is_decresing = false
 			}
 		}
 
@@ -46,10 +47,6 @@ func part_1(file *os.File) int {
 	return safe_reports
 
 }
-
-// func part_2(file *os.File) int {
-
-// }
 
 func main() {
 
