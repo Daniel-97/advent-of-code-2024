@@ -22,12 +22,6 @@ func part_1(file *os.File) int {
 
 	for i := 0; i < len(matrix); i++ {
 		for j := 0; j < len(matrix[i]); j++ {
-			char := matrix[i][j]
-
-			// Skip if the current letter is not an X or a S (XMAS)
-			if char != 'X' && char != 'S' {
-				continue
-			}
 
 			// Check right
 			if j+4 <= len(matrix[i]) && check(matrix[i][j:j+4]) {
@@ -35,13 +29,28 @@ func part_1(file *os.File) int {
 			}
 
 			// Check down
-			if i+4 < len(matrix) {
-				column := []rune(matrix[i][j])
+			if i+4 <= len(matrix) {
+				column := []rune{matrix[i][j], matrix[i+1][j], matrix[i+2][j], matrix[i+3][j]}
+				if check(column) {
+					cont++
+				}
+			}
+
+			// Check diagonally down
+			if i+4 <= len(matrix) && j+4 <= len(matrix[i]) {
+				diagonal := []rune{matrix[i][j], matrix[i+1][j+1], matrix[i+2][j+2], matrix[i+3][j+3]}
+				if check(diagonal) {
+					cont++
+				}
 			}
 
 			// Check diagonally up
-
-			// Check diagonally down
+			if i-3 >= 0 && j+4 <= len(matrix[i]) {
+				diagonal := []rune{matrix[i][j], matrix[i-1][j+1], matrix[i-2][j+2], matrix[i-3][j+3]}
+				if check(diagonal) {
+					cont++
+				}
+			}
 		}
 	}
 	return cont
