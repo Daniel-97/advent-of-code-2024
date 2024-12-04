@@ -4,12 +4,47 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"regexp"
-	"strconv"
 )
 
-func part_1(file *os.File) int {
+func check(array []rune) bool {
+	return string(array) == "XMAS" || string(array) == "SAMX"
+}
 
+func part_1(file *os.File) int {
+	scanner := bufio.NewScanner(file)
+	cont := 0
+	var matrix [][]rune
+
+	for scanner.Scan() {
+		line := scanner.Text()
+		matrix = append(matrix, []rune(line))
+	}
+
+	for i := 0; i < len(matrix); i++ {
+		for j := 0; j < len(matrix[i]); j++ {
+			char := matrix[i][j]
+
+			// Skip if the current letter is not an X or a S (XMAS)
+			if char != 'X' && char != 'S' {
+				continue
+			}
+
+			// Check right
+			if j+4 <= len(matrix[i]) && check(matrix[i][j:j+4]) {
+				cont++
+			}
+
+			// Check down
+			if i+4 < len(matrix) {
+				column := []rune(matrix[i][j])
+			}
+
+			// Check diagonally up
+
+			// Check diagonally down
+		}
+	}
+	return cont
 }
 
 func main() {
