@@ -31,22 +31,23 @@ func part_1(file *os.File) int {
 func part_2(file *os.File) int {
 	scanner := bufio.NewScanner(file)
 	sum := 0
+	can_mul := true
 
 	for scanner.Scan() {
 		line := scanner.Text()
-		re := regexp.MustCompile(`mul\((\d{1,3}),(\d{1,3})\)`)
-		re_do := regexp.MustCompile(`do\(\)`)
-		re_do_not := regexp.MustCompile(`don't\(\)`)
-
-		matches := re.FindAllStringSubmatchIndex(line, -1)
-		matches_do := re_do.FindAllStringSubmatchIndex(line, -1)
-		matches_do_not := re_do_not.FindAllStringSubmatchIndex(line, -1)
-
+		re := regexp.MustCompile(`mul\((\d{1,3}),(\d{1,3})\)|do\(\)|don't\(\)`)
+		matches := re.FindAllStringSubmatch(line, -1)
 		for _, match := range matches {
-			x, _ := strconv.Atoi(line[match[2]:match[3]])
-			y, _ := strconv.Atoi(line[match[4]:match[5]])
-
-			sum = sum + x*y
+			fmt.Println(match[0])
+			if match[0] == "do()" {
+				can_mul = true
+			} else if match[0] == "don't()" {
+				can_mul = false
+			} else if can_mul {
+				x, _ := strconv.Atoi(match[1])
+				y, _ := strconv.Atoi(match[2])
+				sum = sum + x*y
+			}
 		}
 	}
 
