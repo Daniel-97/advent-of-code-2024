@@ -56,6 +56,35 @@ func part_1(file *os.File) int {
 	return cont
 }
 
+func check_mas(array []rune) bool {
+	return string(array) == "MAS" || string(array) == "SAM"
+}
+
+func part_2(file *os.File) int {
+	scanner := bufio.NewScanner(file)
+	cont := 0
+	var matrix [][]rune
+
+	for scanner.Scan() {
+		line := scanner.Text()
+		matrix = append(matrix, []rune(line))
+	}
+
+	for i := 0; i < len(matrix); i++ {
+		for j := 0; j < len(matrix[i]); j++ {
+			if i-1 >= 0 && i+1 < len(matrix) && j-1 >= 0 && j+1 < len(matrix[i]) {
+				diag_1 := []rune{matrix[i-1][j-1], matrix[i][j], matrix[i+1][j+1]}
+				diag_2 := []rune{matrix[i+1][j-1], matrix[i][j], matrix[i-1][j+1]}
+				if check_mas(diag_1) && check_mas(diag_2) {
+					cont++
+				}
+			}
+		}
+	}
+
+	return cont
+}
+
 func main() {
 
 	if len(os.Args) < 2 || os.Args[1] == "" {
@@ -74,9 +103,9 @@ func main() {
 
 	res1 := part_1(file)
 	file.Seek(0, 0)
-	// res2 := part_2(file)
+	res2 := part_2(file)
 
 	fmt.Println("part1 sol:", res1)
-	// fmt.Println("part2 sol:", res2)
+	fmt.Println("part2 sol:", res2)
 
 }
