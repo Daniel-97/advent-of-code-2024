@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"sort"
 	"strconv"
 	"strings"
 )
@@ -107,16 +108,11 @@ func part_2(file *os.File) int {
 		} else {
 			// Section 2, update
 			pages := strings.Split(line, ",")
-			right_pages := make([]string, len(pages))
 
 			is_valid := true
-			// middle_page := 0
+			middle_page := 0
 
 			for i, page := range pages {
-
-				if i == (len(pages) / 2) {
-					// middle_page, _ = strconv.Atoi(page)
-				}
 
 				page_order := page_ordering[page]
 				for _, next_page := range pages[i+1:] {
@@ -128,7 +124,15 @@ func part_2(file *os.File) int {
 
 			if !is_valid {
 				// Try to corretct the update
-				fmt.Println("Found incorrect update ", pages)
+				sort.Slice(pages, func(i int, j int) bool {
+					page := pages[i]
+					next_page := pages[j]
+					page_order := page_ordering[page]
+					return !in_array(page_order, next_page)
+				})
+
+				middle_page, _ = strconv.Atoi(pages[len(pages)/2])
+				cont += middle_page
 			}
 
 		}
